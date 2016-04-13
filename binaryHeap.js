@@ -1,5 +1,4 @@
 function BinaryHeap () {
-  //this code is messy but it's mine so it's good
   //THIS IS FOR A MIN HEAP
   this._heap = [];
   this._compare = function (i, j) { return i < j };
@@ -23,33 +22,34 @@ BinaryHeap.prototype.parent = function(index) { return Math.floor((index - 1)/2)
 BinaryHeap.prototype.rightChild = function(index) { return (2 * (index+1));}
 BinaryHeap.prototype.leftChild = function(index) {return (2 * (index) + 1);}
 
-BinaryHeap.prototype.bubbleUp = function(index, fn){
-  //must be called on a parent node
+BinaryHeap.prototype.isOutOfPlace = function(rightIndex, leftIndex, index) {
+  return this._heap[rightIndex] < this._heap[index] || this._heap[leftIndex] < this._heap[index];
+}
+
+BinaryHeap.prototype.bubbleUp = function(index, up){
+  //if you want to bubble up index must be the parent node
   //second parameter is bool. true to bubble up false to bubble down
-  let temp;
   let rightIndex = this.rightChild(index);
   let leftIndex = this.leftChild(index);
-  let bool = this._compare(this._heap[rightIndex], this._heap[index]);
-  bool = bool || this._compare(this._heap[leftIndex], this._heap[index])
+  let is = this.isOutOfPlace(rightIndex, leftIndex, index);
+  let i;
 
-  //variable bool checks the node at index index is greater than its child nodes
+  //variable is checks the node at index index is greater than its child nodes
   //if it is greater than its child nodes
     //swap with smallest child node
     //if you want to bubble down call the bubbleUP function recursively on the index of the smaller child node
     //if you want to bubble up call the bubbleUp  function recursively on the parent node
 
-  if(bool){
-    if (this._compare(this._heap[leftIndex], this._heap[rightIndex])){
-      if(this._heap[leftIndex]){
-        swap(index, leftIndex, this._heap);
-        fn === false ? fn = this.leftChild : fn = this.parent;
-        this.bubbleUp(fn(index));
-      }
+  if(is){
+    if (this._heap[leftIndex] < this._heap[rightIndex]){ //if this._heap[leftIndex or rightIndex] is undefined it will fall into the else statement
+      swap(index, leftIndex, this._heap);
+      up === false ? i = this.leftChild(index) : i = this.parent(index)
+      this.bubbleUp(i);
     }else{
-      if(this._heap[rightIndex]){
+      if(this._heap[rightIndex]){ //make sure we are not accessing null values
         swap(index, rightIndex, this._heap);
-        fn === false ? fn = this.rightChild : fn = this.parent;
-        this.bubbleUp(fn(index));
+        up === false ? i = this.rightChild(index) : i = this.parent(index);
+        this.bubbleUp(i);
       }
     }
   }
